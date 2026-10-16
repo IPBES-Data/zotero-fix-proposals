@@ -112,6 +112,7 @@ test("the window opens and shows the status of each fix", async () => {
   assert.equal(cells("doi_candidates")[3], "1", "options count as one item");
   assert.equal(cells("openalex_id")[3], "2", "items openalex_id");
   assert.ok(SE.clients.forPlugin("fix-proposals@ipbes-data"), "registered with Safe Edit");
+  assert.match($("#updated").textContent, /^Fixes updated: /, "when the fixes were updated");
 });
 
 test("sending the current page writes the changes, then they are made already", async () => {

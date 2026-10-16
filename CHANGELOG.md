@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.9
+
+- "Fixes updated: <date and time>" shown prominently next to the group (when
+  the report last calculated the fixes), instead of "report data of".
+
 ## 0.1.8
 
 - Downloads and updates through the IPBES Literature Report website.
