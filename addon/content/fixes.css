@@ -3,6 +3,10 @@ body { font: message-box; font-size: 13px; margin: 0; padding: 12px 16px;
 /* drop-down lists only as wide as their contents */
 menulist { display: inline-flex; vertical-align: middle; min-width: 160px; }
 header { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+/* when the fixes were updated, next to the group */
+.updated { padding: 3px 12px; border-radius: 999px; background: #fff4d6; color: #1a1a1a;
+  border: 1px solid #e6c56b; font-weight: 600; }
+.updated:empty { display: none; }
 nav { display: flex; gap: 4px; border-bottom: 1px solid #ccc; margin-bottom: 12px; }
 nav button { border: none; background: none; padding: 6px 12px; color: #2a6db0; cursor: pointer; border-radius: 0; }
 nav button.active { border: 1px solid #ccc; border-bottom-color: Canvas; color: CanvasText; margin-bottom: -1px; }

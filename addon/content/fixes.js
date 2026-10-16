@@ -158,8 +158,9 @@ async function loadGroupNow() {
 async function refreshStatus() {
   S.status = await api.status([S.data.group_id]);
   S.group = S.status.groups[0];
-  $("connection").textContent =
-    `Safe Edit ${S.status.plugin_version} · report data of ${localTime(S.data.created)}`;
+  // when the fixes of this group were calculated (last run of the report)
+  $("updated").textContent = "Fixes updated: " + localTime(S.data.created);
+  $("connection").textContent = `Safe Edit ${S.status.plugin_version}`;
 }
 
 async function showTab(name, wait = true) {
@@ -273,7 +274,7 @@ async function renderStatus() {
     el("h3", {}, "Fixes"),
     fixesTable,
     el("p", { class: "notes" },
-      `Items: from the report data of ${localTime(S.data.created)}. Fixed: of these, items which have the proposed ` +
+      `Items: from the fixes updated on ${localTime(S.data.created)}. Fixed: of these, items which have the proposed ` +
       "value in Zotero now. Click a problem to show its outstanding proposed changes. ",
       S.data.report ? el("a", { onclick: () => Zotero.launchURL(S.data.report) }, "Open the report") : null),
     el("p", { class: "notes" },
