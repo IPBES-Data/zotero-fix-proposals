@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Fix Proposals tests",
+  "version": "1.0",
+  "description": "Runs the tests in tests/zotero inside Zotero. For test profiles only.",
+  "applications": {
+    "zotero": {
+      "id": "fix-proposals-tests@ipbes-data",
+      "update_url": "https://example.org/none.json",
+      "strict_min_version": "10.0",
+      "strict_max_version": "10.0.*"
+    }
+  }
+}

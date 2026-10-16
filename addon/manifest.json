@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Zotero Fix Proposals",
+  "version": "0.1.8",
+  "description": "Shows fixes proposed for Zotero groups (e.g. by the IPBES Literature Report) and applies the ones you choose through Zotero Safe Edit, after approval.",
+  "author": "Rainer M. Krug",
+  "applications": {
+    "zotero": {
+      "id": "fix-proposals@ipbes-data",
+      "update_url": "https://ipbes-data.github.io/IPBES.LiteratureReport/plugins/zotero-fix-proposals/updates.json",
+      "strict_min_version": "10.0",
+      "strict_max_version": "10.0.*"
+    }
+  }
+}

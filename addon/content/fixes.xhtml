@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" windowtype="zotero:fix-proposals"
+      style="background-color: Canvas; color: CanvasText; color-scheme: light dark;">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fix Proposals</title>
+    <!-- Zotero's basic styles, e.g. the background of drop-down menus -->
+    <link rel="stylesheet" href="chrome://global/skin/global.css" />
+    <!-- Zotero (include.js) and its interface elements, e.g. menulist -->
+    <script src="chrome://zotero/content/customElements.js" />
+    <script src="chrome://fix-proposals/content/fixes.js" />
+  </head>
+  <body>
+    <header>
+      <label>Group</label>
+      <menulist xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="group"><menupopup /></menulist>
+      <button id="refresh">Refresh</button>
+      <span id="connection" class="notes"></span>
+    </header>
+    <nav id="tabs">
+      <button data-tab="status" class="active">Status</button>
+      <button data-tab="fixes">Fixes</button>
+      <button data-tab="undo">Undo</button>
+      <button data-tab="restore">Restore</button>
+    </nav>
+    <main>
+      <section id="tab-status"></section>
+      <section id="tab-fixes" hidden="hidden">
+        <p class="intro">Changes proposed for problems found in the report. They are sent to
+          Zotero Safe Edit, where you approve them.</p>
+        <label>Fix</label>
+        <menulist xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="fix"><menupopup /></menulist>
+        <div id="fix-body"></div>
+      </section>
+      <section id="tab-undo" hidden="hidden">
+        <p class="intro">All changes made through Safe Edit in this group, by batch. Tick a batch
+          to undo all its changes, or open it to tick single changes. A change can only be undone
+          if the field still has the value Safe Edit set.</p>
+        <div id="undo-body"></div>
+      </section>
+      <section id="tab-restore" hidden="hidden">
+        <p class="intro">Brings the group back to the state of a backup. Every difference in the
+          fields Safe Edit may change is proposed, including changes made by hand.</p>
+        <div id="restore-body"></div>
+      </section>
+    </main>
+  </body>
+</html>

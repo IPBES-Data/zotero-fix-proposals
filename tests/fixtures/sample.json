@@ -1,0 +1,603 @@
+{
+ "format": "zotero-fix-proposals",
+ "version": 1,
+ "created": "2026-10-16T07:18:07Z",
+ "group_id": 2499181,
+ "name": "PAND",
+ "report": "https://ipbes-data.github.io/IPBES.LiteratureReport/IPBES_PAND_2499181.html",
+ "checks": [
+  {
+   "id": "retracted",
+   "check": "Retracted publications",
+   "count": 1,
+   "severity": "fix",
+   "status": "Please fix"
+  },
+  {
+   "id": "wrong-doi",
+   "check": "DOI points to a different publication",
+   "count": 14,
+   "severity": "fix",
+   "status": "Please fix"
+  },
+  {
+   "id": "duplicates",
+   "check": "Items which are in the group more than once",
+   "count": 1,
+   "severity": "fix",
+   "status": "Please fix"
+  },
+  {
+   "id": "invalid-doi",
+   "check": "DOI field with an invalid DOI",
+   "count": 0,
+   "severity": "fix",
+   "status": "OK"
+  },
+  {
+   "id": "doi-form",
+   "check": "DOI field with a link or prefix instead of the DOI",
+   "count": 35,
+   "severity": "fix",
+   "status": "Please fix"
+  },
+  {
+   "id": "issn-form",
+   "check": "ISSN not in the standard form",
+   "count": 43,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "misplaced-doi",
+   "check": "DOI in the wrong field",
+   "count": 12,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "not-found",
+   "check": "DOI not found in OpenAlex",
+   "count": 9,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "year",
+   "check": "Missing or unusual publication year",
+   "count": 16,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "fill",
+   "check": "Empty journal, volume, issue or pages, found in OpenAlex",
+   "count": 55,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "language",
+   "check": "Language not given as a language code",
+   "count": 26,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "no-identifier",
+   "check": "Items without DOI, ISBN, ISSN or URL",
+   "count": 142,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "doi-candidates",
+   "check": "Items without DOI, for which OpenAlex has one",
+   "count": 75,
+   "severity": "check",
+   "status": "Please check"
+  },
+  {
+   "id": "extra-id",
+   "check": "OpenAlex ID in Extra not valid",
+   "count": 0,
+   "severity": "check",
+   "status": "OK"
+  },
+  {
+   "id": "openalex-id",
+   "check": "Items without their OpenAlex ID in Extra",
+   "count": 505,
+   "severity": "info",
+   "status": "For information"
+  },
+  {
+   "id": "untagged",
+   "check": "Items without tags",
+   "count": 0,
+   "severity": "info",
+   "status": "OK"
+  }
+ ],
+ "fixes": [
+  {
+   "id": "doi_misplaced",
+   "problem": "DOI in wrong field",
+   "value": "DOI from other field (URL, Extra)",
+   "field": "DOI",
+   "check": "misplaced-doi",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "8L4MCXZ7",
+     "title": "Healthy Wetlands, Healthy People: Mosquito Borne Disease",
+     "field": "DOI",
+     "old": "",
+     "new": "10.1007/978-94-017-9609-5_6",
+     "reason": "DOI found in the URL field",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1007/978-94-017-9609-5_6",
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "MCDKH3HK",
+     "title": "Emerging Viral Zoonoses from Wildlife Associated with Animal-Based Food Systems: Risks and Opportunities",
+     "field": "DOI",
+     "old": "",
+     "new": "10.1007/978-3-319-24442-6_2",
+     "reason": "DOI found in the URL field",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1007/978-3-319-24442-6_2",
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "HQG8VMZA",
+     "title": "The Inclusive Cost of Pandemic Influenza Risk",
+     "field": "DOI",
+     "old": "",
+     "new": "10.3386/w22137",
+     "reason": "DOI found in the Extra field",
+     "proposed": true,
+     "note": null,
+     "doi": "10.3386/w22137",
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "doi_form",
+   "problem": "DOI as link or with prefix",
+   "value": "DOI without link or prefix",
+   "field": "DOI",
+   "check": "doi-form",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "CQUFDDMI",
+     "title": "Wildlife laundering through breeding farms: Illegal harvest, population declines and a means of regulating the trade of green pythons (Morelia viridis) from Indonesia",
+     "field": "DOI",
+     "old": "https://doi.org/10.1016/j.biocon.2011.10.002",
+     "new": "10.1016/j.biocon.2011.10.002",
+     "reason": "DOI as a link or with a prefix",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/j.biocon.2011.10.002",
+     "openalex": "https://openalex.org/W2157513828",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "5WGNCD4N",
+     "title": "North Africa as a source for European eel following the 2010 EU CITES eel trade ban",
+     "field": "DOI",
+     "old": "https://doi.org/10.1016/j.marpol.2017.06.036",
+     "new": "10.1016/j.marpol.2017.06.036",
+     "reason": "DOI as a link or with a prefix",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/j.marpol.2017.06.036",
+     "openalex": "https://openalex.org/W2751264110",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "W7C34G7L",
+     "title": "Under what circumstances can wildlife farming benefit species conservation?",
+     "field": "DOI",
+     "old": "https://doi.org/10.1016/j.gecco.2016.03.007",
+     "new": "10.1016/j.gecco.2016.03.007",
+     "reason": "DOI as a link or with a prefix",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/j.gecco.2016.03.007",
+     "openalex": "https://openalex.org/W2340991557",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "doi_candidates",
+   "problem": "No DOI",
+   "value": "DOI found in OpenAlex",
+   "field": "DOI",
+   "check": "doi-candidates",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "9HVHNXHU",
+     "title": "A Comprehensive Overview of Global Biodiversity Finance",
+     "field": "DOI",
+     "old": "",
+     "new": "10.1787/25f9919e-en",
+     "reason": "Likely match: A comprehensive overview of global biodiversity finance (2020, OECD, OECD environment policy papers)",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1787/25f9919e-en",
+     "openalex": "https://openalex.org/W4402876940",
+     "choice": "9HVHNXHU",
+     "preselect": true,
+     "append": null
+    },
+    {
+     "item_key": "FPMXZQI5",
+     "title": "A One Health Approach to Wildlife and Food Safety",
+     "field": "DOI",
+     "old": "",
+     "new": "10.1007/978-3-319-24442-6_11",
+     "reason": "Likely match: A One Health Approach to Wildlife and Food Safety (2015, A. Arens, Springer eBooks)",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1007/978-3-319-24442-6_11",
+     "openalex": "https://openalex.org/W2344467373",
+     "choice": "FPMXZQI5",
+     "preselect": true,
+     "append": null
+    },
+    {
+     "item_key": "JZZ5Y43L",
+     "title": "African Medicinal Spices of Genus Piper",
+     "field": "DOI",
+     "old": "",
+     "new": "10.1016/b978-0-12-809286-6.00027-3",
+     "reason": "Likely match: African Medicinal Spices of Genus Piper (2017, Idris Ajayi Oyemitan, Elsevier eBooks)",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/b978-0-12-809286-6.00027-3",
+     "openalex": "https://openalex.org/W2573272609",
+     "choice": "JZZ5Y43L",
+     "preselect": true,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "date",
+   "problem": "No date",
+   "value": "Date from OpenAlex",
+   "field": "Date",
+   "check": "year",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "THRRQLSZ",
+     "title": "Bat conservation and zoonotic disease risk: a research agenda to prevent misguided persecution in the aftermath of COVID-19",
+     "field": "date",
+     "old": "",
+     "new": "2020-08-31",
+     "reason": "Date of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1111/acv.12636",
+     "openalex": "https://openalex.org/W3081728095",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "issn_form",
+   "problem": "ISSN not in standard form",
+   "value": "ISSN in standard form",
+   "field": "ISSN",
+   "check": "issn-form",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "CSC9FGYN",
+     "title": "Livelihood alternatives for the unsustainable use of bushmeat. Report prepared for the CBD Bushmeat Liaison Group. Technical Series No. 60, Montreal, SCBD, 46 pages.",
+     "field": "ISSN",
+     "old": "9292253883",
+     "new": "",
+     "reason": "ISSN in the standard form",
+     "proposed": false,
+     "note": "Not a valid ISSN: 9292253883 (looks like an ISBN)",
+     "doi": null,
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "35LDBXIW",
+     "title": "EU Trade Policy and the Wildlife Trade",
+     "field": "ISSN",
+     "old": "9284603854",
+     "new": "",
+     "reason": "ISSN in the standard form",
+     "proposed": false,
+     "note": "Not a valid ISSN: 9284603854 (looks like an ISBN)",
+     "doi": null,
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "324DAV7H",
+     "title": "New products and industries from biodiversity",
+     "field": "ISSN",
+     "old": "1559632283",
+     "new": "",
+     "reason": "ISSN in the standard form",
+     "proposed": false,
+     "note": "Not a valid ISSN: 1559632283 (looks like an ISBN)",
+     "doi": null,
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "fill",
+   "problem": "Empty fields",
+   "value": "Values from OpenAlex",
+   "field": "Journal, Volume, Issue, Pages",
+   "check": "fill",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "3Q92MM99",
+     "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster",
+     "field": "volume",
+     "old": "",
+     "new": "395",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/s0140-6736(20)30154-9",
+     "openalex": "https://openalex.org/W3002539152",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "3Q92MM99",
+     "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster",
+     "field": "issue",
+     "old": "",
+     "new": "10223",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/s0140-6736(20)30154-9",
+     "openalex": "https://openalex.org/W3002539152",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "3Q92MM99",
+     "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster",
+     "field": "pages",
+     "old": "",
+     "new": "514-523",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1016/s0140-6736(20)30154-9",
+     "openalex": "https://openalex.org/W3002539152",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "VPWDWT5I",
+     "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+     "field": "volume",
+     "old": "",
+     "new": "579",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1038/s41586-020-2012-7",
+     "openalex": "https://openalex.org/W3004280078",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "VPWDWT5I",
+     "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+     "field": "issue",
+     "old": "",
+     "new": "7798",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1038/s41586-020-2012-7",
+     "openalex": "https://openalex.org/W3004280078",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "VPWDWT5I",
+     "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+     "field": "pages",
+     "old": "",
+     "new": "270-273",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1038/s41586-020-2012-7",
+     "openalex": "https://openalex.org/W3004280078",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "THRRQLSZ",
+     "title": "Bat conservation and zoonotic disease risk: a research agenda to prevent misguided persecution in the aftermath of COVID-19",
+     "field": "pages",
+     "old": "",
+     "new": "303-307",
+     "reason": "Value of the DOI in OpenAlex",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1111/acv.12636",
+     "openalex": "https://openalex.org/W3081728095",
+     "choice": null,
+     "preselect": null,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "language",
+   "problem": "Language not as ISO code",
+   "value": "ISO language code",
+   "field": "Language",
+   "check": "language",
+   "bulk": false,
+   "changes": [
+    {
+     "item_key": "CTJTVFNR",
+     "title": "One health: the theory and practice of integrated health approaches",
+     "field": "language",
+     "old": "eng",
+     "new": "en",
+     "reason": "Language not given as a language code",
+     "proposed": true,
+     "note": null,
+     "doi": null,
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "EYWXJBBW",
+     "title": "Brenner's encyclopedia of genetics",
+     "field": "language",
+     "old": "eng",
+     "new": "en",
+     "reason": "Language not given as a language code",
+     "proposed": true,
+     "note": null,
+     "doi": null,
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    },
+    {
+     "item_key": "I35JTJVU",
+     "title": "Transmissions to mice indicate that 'new variant' CJD is caused by the BSE agent",
+     "field": "language",
+     "old": "eng",
+     "new": "en",
+     "reason": "Language not given as a language code",
+     "proposed": true,
+     "note": null,
+     "doi": null,
+     "openalex": null,
+     "choice": null,
+     "preselect": null,
+     "append": null
+    }
+   ]
+  },
+  {
+   "id": "openalex_id",
+   "problem": "No OpenAlex ID",
+   "value": "OpenAlex ID of the DOI",
+   "field": "Extra",
+   "check": "openalex-id",
+   "bulk": true,
+   "changes": [
+    {
+     "item_key": "V6PBDIS4",
+     "title": "Urban nature in a time of crisis: recreational use of green space increases during the COVID-19 outbreak in Oslo, Norway",
+     "field": "extra",
+     "old": "",
+     "new": "OpenAlex: W3082422933",
+     "reason": "OpenAlex ID of the DOI",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1088/1748-9326/abb396",
+     "openalex": "https://openalex.org/W3082422933",
+     "choice": null,
+     "preselect": null,
+     "append": "OpenAlex: W3082422933"
+    },
+    {
+     "item_key": "78Q3QH4V",
+     "title": "The SARS epidemic in Hong Kong: what lessons have we learned?",
+     "field": "extra",
+     "old": "",
+     "new": "OpenAlex: W4243866347",
+     "reason": "OpenAlex ID of the DOI",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1177/014107680309600803",
+     "openalex": "https://openalex.org/W4243866347",
+     "choice": null,
+     "preselect": null,
+     "append": "OpenAlex: W4243866347"
+    },
+    {
+     "item_key": "DYMA9Q9J",
+     "title": "What factors might have led to the emergence of Ebola in West Africa?",
+     "field": "extra",
+     "old": "",
+     "new": "OpenAlex: W1850664963",
+     "reason": "OpenAlex ID of the DOI",
+     "proposed": true,
+     "note": null,
+     "doi": "10.1371/journal.pntd.0003652",
+     "openalex": "https://openalex.org/W1850664963",
+     "choice": null,
+     "preselect": null,
+     "append": "OpenAlex: W1850664963"
+    }
+   ]
+  },
+  {
+   "id": "extra_id",
+   "problem": "OpenAlex ID not valid",
+   "value": "OpenAlex ID of the DOI",
+   "field": "Extra",
+   "check": "extra-id",
+   "bulk": false,
+   "changes": []
+  }
+ ]
+}
