@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.10
+
+- Works with all Zotero 10 releases (10.0 or newer 10.x), not only 10.0.x:
+  Zotero would otherwise disable the plugin at its next minor release.
+
 ## 0.1.9
 
 - "Fixes updated: <date and time>" shown prominently next to the group (when

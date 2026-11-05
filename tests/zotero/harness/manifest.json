@@ -8,7 +8,7 @@
       "id": "fix-proposals-tests@ipbes-data",
       "update_url": "https://example.org/none.json",
       "strict_min_version": "10.0",
-      "strict_max_version": "10.0.*"
+      "strict_max_version": "10.*"
     }
   }
 }
