@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.11
+
+- "Update the fixes": opens the GitHub page from which the report can be run
+  again (needs write access to the repository), with a note where to check its
+  progress. Shown only if the proposals file has an `update` address.
+
 ## 0.1.10
 
 - Works with all Zotero 10 releases (10.0 or newer 10.x), not only 10.0.x:

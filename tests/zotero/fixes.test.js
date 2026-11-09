@@ -64,6 +64,7 @@ test("setup: test group, items, feed in a local folder, permission", async () =>
 
   var feed = {
     format: "zotero-fix-proposals", version: 1, created: new Date().toISOString(), group_id: GID, name: "Test",
+    update: "https://github.com/IPBES-Data/IPBES.LiteratureReport/actions/workflows/update.yml",
     checks: [
       { id: "doi-form", check: "DOI form", count: 3, severity: "fix", status: "Please fix" },
       { id: "doi-candidates", check: "DOI found", count: 1, severity: "check", status: "Please check" },
@@ -113,6 +114,7 @@ test("the window opens and shows the status of each fix", async () => {
   assert.equal(cells("openalex_id")[3], "2", "items openalex_id");
   assert.ok(SE.clients.forPlugin("fix-proposals@ipbes-data"), "registered with Safe Edit");
   assert.match($("#updated").textContent, /^Fixes updated: /, "when the fixes were updated");
+  assert.match($("#tab-status").textContent, /Update the fixes.*Progress can be checked/, "link to update the fixes");
 });
 
 test("sending the current page writes the changes, then they are made already", async () => {
