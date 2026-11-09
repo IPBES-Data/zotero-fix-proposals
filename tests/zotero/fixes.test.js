@@ -75,7 +75,11 @@ test("setup: test group, items, feed in a local folder, permission", async () =>
         changes: [...a.map((it, i) => change(it, "DOI", "https://doi.org/10.1/a" + i, "10.1/a" + i)),
           change(e, "language", "Español", "", { proposed: false, note: "Language not recognised" })] },
       { id: "doi_candidates", problem: "No DOI", value: "DOI found", field: "DOI", check: "doi-candidates", bulk: false,
-        changes: [change(d, "DOI", "", "10.1/d1", { choice: d.key, preselect: true }),
+        changes: [change(d, "DOI", "", "10.1/d1", { choice: d.key, preselect: true, compare: { heading: "Likely match", fields: [
+          { label: "Title", zotero: "T", found: "T", same: true, more: false },
+          { label: "Year", zotero: "2016", found: "2015", same: false, more: false },
+          { label: "Author", zotero: "Arens, Amanda", found: null, same: null, more: false },
+          { label: "Journal", zotero: "J", found: "Journal J", same: null, more: true }] } }),
           change(d, "DOI", "", "10.1/d2", { choice: d.key, preselect: false })] },
       { id: "openalex_id", problem: "No OpenAlex ID", value: "OpenAlex ID", field: "Extra", check: "openalex-id", bulk: true,
         changes: [change(x1, "extra", "", "OpenAlex: W1", { append: "OpenAlex: W1" }),
@@ -135,6 +139,15 @@ test("options of an item: only one can be ticked", async () => {
   await chooseFix("doi_candidates");
   var boxes = $$("#changes input.option");
   assert.equal(boxes.length, 2, "2 options");
+  // the comparison: one line per field, the details hidden until asked for
+  assert.match($("#changes tr.group-head").textContent, /\(2016, Arens, Amanda\)/, "year and author of the item");
+  assert.equal($$("#changes .cmp-line").length, 3, "title, year, author");
+  assert.equal($$("#changes .cmp-line.cmp-same").length, 1, "same title");
+  assert.match($("#changes .cmp-line.cmp-diff").textContent, /Year: 2015/, "different year");
+  var details = $("#changes .cmp-details");
+  assert.ok(details.hidden, "details hidden");
+  $("#changes .cmp-toggle").click();
+  assert.ok(!details.hidden && /Journal J/.test(details.textContent), "details shown");
   assert.ok(boxes[0].checked && !boxes[1].checked, "the likely one preselected");
   boxes[1].checked = true;
   boxes[1].dispatchEvent(new ctx.win.Event("change"));

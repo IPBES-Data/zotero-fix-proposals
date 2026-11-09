@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.12
+
+- DOI found by title (and other fixes with a comparison): one line each for
+  title, year and author of the work found, in a full-width row under the
+  option, green if the same as in Zotero,
+  red if different, at most two lines each; "Details" shows all fields of
+  both in full. The item's year and author are shown next to its title.
+  Shown only if the proposals file has `compare`; otherwise as before.
+
 ## 0.1.11
 
 - "Update the fixes": opens the GitHub page from which the report can be run
