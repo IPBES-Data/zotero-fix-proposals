@@ -459,16 +459,19 @@ function changesTable(p, open, action, canSend) {
         selected = L.select(selected, list, Number(ev.target.dataset.k), ev.target.checked);
         for (let b of table.querySelectorAll("input[data-k]")) b.checked = selected.has(Number(b.dataset.k));
       });
-      trs.push(el("tr", { class: isOption ? "option" : null },
+      trs.push(el("tr", { class: [isOption ? "option" : "", c.compare ? "has-compare" : ""].join(" ").trim() || null },
         // options: the description of the option (e.g. the work found) under
-        // the item's title, where there is room for it
-        // with a comparison: its heading there, the comparison under Why
+        // the item's title, where there is room for it; with a comparison
+        // its heading, the comparison in a full-width row below
         el("td", {}, box),
         el("td", {}, !isOption ? title : c.compare ? c.compare.heading || "" : c.reason || ""),
         el("td", {}, L.fieldLabel(c.field)),
         el("td", {}, diffNode(rows[k].diff)),
-        el("td", {}, c.compare ? compareNode(c.compare) : isOption ? "" : c.reason || ""),
+        el("td", {}, isOption || c.compare ? "" : c.reason || ""),
         el("td", {}, ok[k] ? "OK" : rows[k].problem || ""), el("td", {}, links(c))));
+      if (c.compare) {
+        trs.push(el("tr", { class: "compare-row" }, el("td", {}, ""), el("td", { colspan: 6 }, compareNode(c.compare))));
+      }
     }
     show(table, trs);
     var prev = el("button", { disabled: page === 0 }, "Previous");
