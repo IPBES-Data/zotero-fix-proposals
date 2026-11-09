@@ -118,7 +118,8 @@ test("the window opens and shows the status of each fix", async () => {
   assert.equal(cells("openalex_id")[3], "2", "items openalex_id");
   assert.ok(SE.clients.forPlugin("fix-proposals@ipbes-data"), "registered with Safe Edit");
   assert.match($("#updated").textContent, /^Fixes updated: /, "when the fixes were updated");
-  assert.match($("#tab-status").textContent, /Update the fixes.*Progress can be checked/, "link to update the fixes");
+  assert.ok(!$("#update-fixes").hidden, "button to update the fixes");
+  assert.match($("#update-fixes").title, /Progress can be checked/, "explained on mouse-over");
 });
 
 test("sending the current page writes the changes, then they are made already", async () => {

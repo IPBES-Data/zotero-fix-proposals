@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.13
+
+- "Update the fixes" is a button right of "Fixes updated", explained on
+  mouse-over (before: a link with a note on the Status tab).
+
 ## 0.1.12
 
 - DOI found by title (and other fixes with a comparison): one line each for
