@@ -397,7 +397,7 @@ function compareNode(cmp) {
   var details = el("table", { class: "cmp-details", hidden: true },
     el("tr", {}, el("th", {}, ""), el("th", {}, "In Zotero"), el("th", {}, "Found")),
     fields.map((f) => el("tr", { class: mark(f) }, el("th", {}, f.label), el("td", {}, value(f.zotero)), el("td", {}, value(f.found)))));
-  var toggle = el("a", { class: "cmp-toggle" }, "Details");
+  var toggle = el("button", { class: "cmp-toggle" }, "Details");
   toggle.addEventListener("click", () => {
     details.hidden = !details.hidden;
     toggle.textContent = details.hidden ? "Details" : "Hide details";

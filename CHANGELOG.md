@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.14
+
+- DOI found by title: "Details" is a button (before: a link).
+
 ## 0.1.13
 
 - "Update the fixes" is a button right of "Fixes updated", explained on
