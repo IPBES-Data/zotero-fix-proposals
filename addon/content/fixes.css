@@ -72,6 +72,7 @@ tr.compare-row td:nth-child(2) { padding-left: 24px; }
 .cmp-same { background: #ccf0d4; color: #1a1a1a; }
 .cmp-diff { background: #ffd7d5; color: #1a1a1a; }
 .cmp-same .cmp-label, .cmp-diff .cmp-label { color: #444; }
+.cmp-toggle { font-size: 12px; padding: 1px 10px; margin-top: 3px; }
 .cmp-details { margin-top: 4px; font-size: 12px; table-layout: auto; width: auto; max-width: 100%; }
 /* not the column widths of the table around it */
 table.changes table.cmp-details th, table.changes table.cmp-details td { width: auto; padding: 2px 4px; }
