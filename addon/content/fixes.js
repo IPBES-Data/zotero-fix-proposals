@@ -101,6 +101,7 @@ async function init() {
     b.addEventListener("click", guarded(() => showTab(b.dataset.tab)));
   }
   $("refresh").addEventListener("click", guarded(() => loadGroup()));
+  $("update-fixes").addEventListener("click", () => S.data && S.data.update && Zotero.launchURL(S.data.update));
   $("group").addEventListener("command", guarded(() => loadGroup()));
   $("fix").addEventListener("command", guarded(() => showFix()));
 
@@ -160,6 +161,12 @@ async function refreshStatus() {
   S.group = S.status.groups[0];
   // when the fixes of this group were calculated (last run of the report)
   $("updated").textContent = "Fixes updated: " + localTime(S.data.created);
+  // optional in the proposals file (older files have no update address)
+  $("update-fixes").hidden = !S.data.update;
+  $("update-fixes").title =
+    "Opens the GitHub page from which the report can be run again (\"Run workflow\"; needs write access to the " +
+    "repository). It runs the report for all groups, usually 5 to 30 minutes. Progress can be checked on the same " +
+    "page (the run at the top of the list). Once it has finished, click Refresh to load the new fixes.";
   $("connection").textContent = `Safe Edit ${S.status.plugin_version}`;
 }
 
@@ -277,14 +284,6 @@ async function renderStatus() {
       `Items: from the fixes updated on ${localTime(S.data.created)}. Fixed: of these, items which have the proposed ` +
       "value in Zotero now. Click a problem to show its outstanding proposed changes. ",
       S.data.report ? el("a", { onclick: () => Zotero.launchURL(S.data.report) }, "Open the report") : null),
-    // optional in the proposals file (older files have no update address)
-    S.data.update
-      ? el("p", { class: "notes" },
-        el("a", { onclick: () => Zotero.launchURL(S.data.update) }, "Update the fixes"),
-        " (GitHub, \"Run workflow\"; needs write access to the repository): runs the report for all groups, " +
-        "usually 5 to 30 minutes. Progress can be checked on the same page (the run at the top of the list). " +
-        "Once it has finished, click Refresh to load the new fixes.")
-      : null,
     el("p", { class: "notes" },
       "Some fixes build on others: once an item has a DOI (from another field or found in OpenAlex), the fixes with " +
       "values from OpenAlex (date, empty fields, OpenAlex ID) can only find it after the next sync and run of the " +
