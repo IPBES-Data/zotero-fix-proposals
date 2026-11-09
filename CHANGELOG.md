@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.15
+
+- Items with several options (e.g. DOI found by title): the heading of each
+  item (title, year, author) is tinted, with a thicker line above, so that it
+  is easier to see where a new item starts.
+
 ## 0.1.14
 
 - DOI found by title: "Details" is a button (before: a link).
