@@ -39,7 +39,9 @@ table.changes th:nth-child(6) { width: 10%; }
 table.changes th:nth-child(7) { width: 110px; }
 table.changes td { overflow-wrap: anywhere; }
 table.status th { font-weight: normal; }
-tr.group-head td { font-weight: 600; padding-top: 10px; }
+/* where a new item starts: thicker line above, tinted heading (also in dark mode) */
+tr.group-head td { font-weight: 600; padding-top: 6px; padding-bottom: 6px;
+  background: rgba(42, 109, 176, 0.12); border-top: 2px solid rgba(42, 109, 176, 0.5); }
 tr.option td:nth-child(2) { padding-left: 24px; }
 tr.made td { color: #999; }
 a { color: #2a6db0; cursor: pointer; text-decoration: none; white-space: nowrap; }
