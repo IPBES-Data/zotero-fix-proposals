@@ -379,6 +379,33 @@ function diffNode(diff) {
     diff.notes && diff.notes.length ? el("div", { class: "notes" }, "Note: " + diff.notes.join("; ")) : null);
 }
 
+// year and author of the item, from the comparison (if any)
+function itemFacts(c) {
+  var f = (label) => ((c.compare && c.compare.fields) || []).find((x) => x.label === label);
+  var facts = ["Year", "Author"].map((l) => f(l) && f(l).zotero).filter(Boolean);
+  return facts.length ? ` (${facts.join(", ")})` : "";
+}
+
+// the item and what was found: one line per field (the value found, at most
+// two lines), green if the same, red if different; Details shows all fields
+// of both in full
+function compareNode(cmp) {
+  var mark = (f) => (f.same === true ? "cmp-same" : f.same === false ? "cmp-diff" : "");
+  var value = (v) => (v === null || v === undefined || v === "" ? el("span", { class: "empty" }, "(none)") : v);
+  var fields = cmp.fields || [];
+  var lines = fields.filter((f) => !f.more).map((f) =>
+    el("div", { class: "cmp-line " + mark(f), title: f.found || "" }, el("span", { class: "cmp-label" }, f.label + ": "), value(f.found)));
+  var details = el("table", { class: "cmp-details", hidden: true },
+    el("tr", {}, el("th", {}, ""), el("th", {}, "In Zotero"), el("th", {}, "Found")),
+    fields.map((f) => el("tr", { class: mark(f) }, el("th", {}, f.label), el("td", {}, value(f.zotero)), el("td", {}, value(f.found)))));
+  var toggle = el("a", { class: "cmp-toggle" }, "Details");
+  toggle.addEventListener("click", () => {
+    details.hidden = !details.hidden;
+    toggle.textContent = details.hidden ? "Details" : "Hide details";
+  });
+  return el("div", { class: "compare" }, lines, toggle, details);
+}
+
 function links(c) {
   var gid = S.data.group_id;
   var out = el("div", { class: "links" });
@@ -423,7 +450,7 @@ function changesTable(p, open, action, canSend) {
       var title = c.title || rows[k].title || c.item_key;
       var isOption = c.choice !== null && c.choice !== undefined;
       if (isOption && c.choice !== lastChoice) {
-        trs.push(el("tr", { class: "group-head" }, el("td", {}, ""), el("td", { colspan: 6 }, title)));
+        trs.push(el("tr", { class: "group-head" }, el("td", {}, ""), el("td", { colspan: 6 }, title + itemFacts(c))));
       }
       lastChoice = isOption ? c.choice : null;
       var box = el("input", { type: "checkbox", class: isOption ? "option" : null, "data-k": k, disabled: !ok[k] });
@@ -435,8 +462,12 @@ function changesTable(p, open, action, canSend) {
       trs.push(el("tr", { class: isOption ? "option" : null },
         // options: the description of the option (e.g. the work found) under
         // the item's title, where there is room for it
-        el("td", {}, box), el("td", {}, isOption ? c.reason || "" : title), el("td", {}, L.fieldLabel(c.field)),
-        el("td", {}, diffNode(rows[k].diff)), el("td", {}, isOption ? "" : c.reason || ""),
+        // with a comparison: its heading there, the comparison under Why
+        el("td", {}, box),
+        el("td", {}, !isOption ? title : c.compare ? c.compare.heading || "" : c.reason || ""),
+        el("td", {}, L.fieldLabel(c.field)),
+        el("td", {}, diffNode(rows[k].diff)),
+        el("td", {}, c.compare ? compareNode(c.compare) : isOption ? "" : c.reason || ""),
         el("td", {}, ok[k] ? "OK" : rows[k].problem || ""), el("td", {}, links(c))));
     }
     show(table, trs);
