@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0
+
+- Edit sessions (with Zotero Safe Edit 0.3.0 or newer): the backup is checked
+  when a fix is chosen, not with every batch, so working through a long fix is
+  no longer refused because the backup got older than the limit. The session
+  lasts until all changes of the fix are sent or you leave the fix (another
+  fix or group, another tab, Refresh, closing the window); Safe Edit ends it
+  when the group is synced. With older Safe Edit versions, as before.
+- Ticked changes are kept while you work on a fix: a refused batch or a new
+  backup no longer resets them.
+- "Backup too old" on the Fixes tab: a button to make a backup right there.
+
 ## 0.1.15
 
 - Items with several options (e.g. DOI found by title): the heading of each

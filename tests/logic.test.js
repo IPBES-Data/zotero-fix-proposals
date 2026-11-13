@@ -80,3 +80,12 @@ test("proposals files are checked", () => {
   bad.fixes.find((f) => f.changes.length).changes[0].item_key = "abc";
   assert.ok(L.checkFile(bad).length, "bad item key");
 });
+
+test("ticks kept by key: the same changes again, rebased lines too", () => {
+  const a = ch({ item_key: "AAAAAAAA" });
+  const b = ch({ item_key: "BBBBBBBB", field: "extra", old: "", new: "X: 1", append: "X: 1" });
+  const keys = new Set([L.tickKey(a), L.tickKey(b)]);
+  const again = [ch({ item_key: "CCCCCCCC" }), a, L.rebase(b, "PMID: 1")];
+  assert.deepStrictEqual([...L.selectionFromKeys(again, [true, true, true], keys)], [1, 2]);
+  assert.deepStrictEqual([...L.selectionFromKeys(again, [true, false, true], keys)], [2], "not accepted: not ticked");
+});

@@ -6,7 +6,7 @@
 // Item data is only ever inserted as text.
 
 var FP, SE, L, api;
-var S = { index: null, entry: null, data: null, status: null, group: null, previews: new Map(), result: null };
+var S = { index: null, entry: null, data: null, status: null, group: null, previews: new Map(), result: null, work: null };
 var PAGE = 50;
 
 // the window's styles, with the version in the address: Zotero keeps
@@ -89,9 +89,54 @@ function toChange(c) {
   return { group_id: S.data.group_id, item_key: c.item_key, field: c.field, old: c.old, new: c.new, reason: c.reason };
 }
 
+// ---- the fix being worked on ------------------------------------------------
+// S.work: group, fix, Safe Edit's edit session and the ticked changes. The
+// session checks the backup once, when the fix is chosen, and lasts until
+// all its changes are sent or the user leaves the fix (another fix or group,
+// another tab, Refresh, closing the window); Safe Edit also ends it when the
+// group is synced. The ticks are kept as long as the fix is worked on. With
+// Safe Edit before 0.3.0 (no sessions) the backup is checked for each batch.
+
+// one after the other: a fix can be chosen again while its session starts
+var workQueue = Promise.resolve();
+function serial(fn) {
+  var run = workQueue.then(fn);
+  workQueue = run.catch(() => {});
+  return run;
+}
+
+function enterFix(fix, { renew = false } = {}) {
+  return serial(async () => {
+    var same = S.work && S.work.group === S.data.group_id && S.work.fix === fix.id;
+    if (same && S.work.session && !renew) return;
+    var ticks = same ? S.work.ticks : null;
+    await endWork();
+    var w = { group: S.data.group_id, fix: fix.id, session: null, backup: null, ticks };
+    S.work = w;
+    if (api.beginSession && S.group.in_zotero && S.group.editable) {
+      var r = await api.beginSession(S.data.group_id);
+      if (r.status === "started") Object.assign(w, { session: r.session_id, backup: r.backup });
+    }
+  });
+}
+
+function leaveFix() {
+  return serial(endWork);
+}
+
+async function endWork() {
+  var w = S.work;
+  S.work = null;
+  if (w && w.session && api.endSession) await api.endSession(w.session);
+}
+
+// options for Safe Edit's preview and apply
+var inSession = () => (S.work && S.work.session ? { session: S.work.session } : {});
+
 // ---- start -------------------------------------------------------------------
 
 window.addEventListener("load", guarded(init));
+window.addEventListener("unload", () => leaveFix());
 
 async function init() {
   FP = Zotero.FixProposals;
@@ -145,6 +190,7 @@ async function loadGroupNow() {
     show($(id), el("p", { class: "notes loading" }, "Loading " + S.entry.name + " …"));
   }
   busy("Loading the proposals of " + S.entry.name + " …");
+  await leaveFix();
   S.data = await FP.feed.group(S.entry);
   await refreshStatus();
   var fixValue = $("fix").value;
@@ -174,6 +220,7 @@ async function showTab(name, wait = true) {
   if (wait && S.loading) await S.loading;
   for (let b of document.querySelectorAll("#tabs button")) b.classList.toggle("active", b.dataset.tab === name);
   for (let s of document.querySelectorAll("main > section")) s.hidden = s.id !== "tab-" + name;
+  if (name !== "fixes") await leaveFix();
   if (name === "status") {
     // Safe Edit's checks (sync, backup) may have changed since
     await refreshStatus();
@@ -213,7 +260,7 @@ async function prepared(fix) {
 // the proposals but asked for each time (one change is enough)
 async function blockersNow(p) {
   if (!S.group.in_zotero || !p.changes.length) return [];
-  var pv = await api.preview([toChange(p.changes[0])]);
+  var pv = await api.preview([toChange(p.changes[0])], inSession());
   return pv.blockers.filter((b) => !/^Too many changes/.test(b));
 }
 
@@ -319,16 +366,38 @@ async function showFix() {
   var fix = S.data.fixes.find((f) => f.id === $("fix").value);
   var body = $("fix-body");
   show(body, el("p", { class: "notes" }, "Loading …"));
+  await enterFix(fix);
   var p = await prepared(fix);
   p.blockers = await blockersNow(p);
   var { open, done } = outstanding(p);
+  // all sent: the session ends
+  if (!open.length) await leaveFix();
   var canSend = S.group.in_zotero && S.group.editable && !p.blockers.length;
   var parts = [];
   if (S.result) parts.push(el("p", { id: "result" }, el("strong", {}, S.result)));
   S.result = null;
   if (!S.group.in_zotero) parts.push(warn("This group is not in this Zotero: the changes can be looked at, but not sent."));
   if (p.blockers.length) {
-    parts.push(el("div", { class: "warn" }, "Zotero Safe Edit will refuse these changes:", el("ul", {}, p.blockers.map((b) => el("li", {}, b)))));
+    // a new backup starts the session again; the ticks stay
+    var backup = null;
+    if (S.group.in_zotero && p.blockers.some((b) => /backup/i.test(b))) {
+      backup = el("button", { id: "fix-backup" }, "Make a backup of this group");
+      backup.addEventListener("click", guarded(async () => {
+        busy("Making a backup …");
+        await api.backup(S.data.group_id);
+        S.previews = new Map();
+        await refreshStatus();
+        await enterFix(fix, { renew: true });
+        await showFix();
+        busy("Backup made.");
+      }));
+    }
+    parts.push(el("div", { class: "warn" }, "Zotero Safe Edit will refuse these changes:",
+      el("ul", {}, p.blockers.map((b) => el("li", {}, b))), backup));
+  } else if (open.length && S.work && S.work.session) {
+    parts.push(el("p", { class: "notes", id: "session" },
+      `The backup of ${localTime(S.work.backup)} is the restore point for these changes. It was checked when you ` +
+      "chose this fix and stays valid until you leave it (another fix or group, another tab, Refresh) or sync."));
   }
   if (fix.bulk) {
     var all = el("button", { class: "primary", id: "send-all", disabled: !open.length || !canSend }, "Send all to Zotero for approval");
@@ -344,7 +413,7 @@ async function showFix() {
   } else if (!open.length) {
     parts.push(el("p", {}, done.length ? `Nothing outstanding — all ${plural(done.length, "change")} are made already.` : "Nothing to change."));
   } else {
-    parts.push(changesTable(p, open, "edit", canSend));
+    parts.push(changesTable(p, open, "edit", canSend, S.work));
   }
   if (done.length) {
     var box = el("input", { type: "checkbox", id: "show-done" });
@@ -427,12 +496,13 @@ async function selectInZotero(key) {
   win.focus();
 }
 
-// table of the outstanding changes: one option per item, pages, sending
-function changesTable(p, open, action, canSend) {
+// table of the outstanding changes: one option per item, pages, sending;
+// `work` (S.work) keeps the ticks while the fix is worked on
+function changesTable(p, open, action, canSend, work = null) {
   var list = open.map((i) => p.changes[i]);
   var rows = open.map((i) => p.rows[i] || {});
   var ok = rows.map((r) => !!r.ok);
-  var selected = L.initialSelection(list, ok);
+  var selected = work && work.ticks ? L.selectionFromKeys(list, ok, work.ticks) : L.initialSelection(list, ok);
   var page = 0;
   var pages = Math.max(1, Math.ceil(list.length / PAGE));
   var table = el("table", { id: "changes", class: "changes" });
@@ -457,6 +527,7 @@ function changesTable(p, open, action, canSend) {
       box.addEventListener("change", (ev) => {
         selected = L.select(selected, list, Number(ev.target.dataset.k), ev.target.checked);
         for (let b of table.querySelectorAll("input[data-k]")) b.checked = selected.has(Number(b.dataset.k));
+        if (work) work.ticks = new Set([...selected].map((j) => L.tickKey(list[j])));
       });
       trs.push(el("tr", { class: [isOption ? "option" : "", c.compare ? "has-compare" : ""].join(" ").trim() || null },
         // options: the description of the option (e.g. the work found) under
@@ -529,7 +600,7 @@ async function send(list, action) {
   var stopped = null;
   for (let [i, b] of batches.entries()) {
     busy(`Batch ${i + 1} of ${batches.length}: approve the changes in Zotero …`);
-    var r = await api.apply(b.map(toChange), action);
+    var r = await api.apply(b.map(toChange), action, inSession());
     if (r.status !== "done") {
       stopped = `batch ${i + 1}: ${r.status}${r.reasons ? " — " + r.reasons.join("; ") : ""}`;
       break;
