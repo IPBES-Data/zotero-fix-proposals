@@ -310,6 +310,65 @@ test("a damaged proposals file gives a clear message", async () => {
   Zotero.Prefs.set("extensions.fix-proposals.feedURL", ctx.feedDir, true);
 });
 
+test("edit session: the backup is checked when the fix is chosen; ticks survive a new backup", async () => {
+  var its = [];
+  for (let i = 0; i < 3; i++) its.push(await item({ title: "Session " + i }));
+  var feed = { ...ctx.feed, fixes: [{ id: "sess", problem: "Session", value: "DOI", field: "DOI", check: "doi-form", bulk: false,
+    changes: its.map((it, i) => change(it, "DOI", "", "10.1/s" + i, { preselect: false })) }] };
+  var dir = PathUtils.join(PathUtils.tempDir, "fix-proposals-session-" + Date.now());
+  await IOUtils.makeDirectory(dir);
+  await IOUtils.writeUTF8(PathUtils.join(dir, "index.json"),
+    JSON.stringify({ format: "zotero-fix-proposals-index", version: 1, groups: [{ group_id: GID, name: "Test", file: "test.json" }] }));
+  await IOUtils.writeUTF8(PathUtils.join(dir, "test.json"), JSON.stringify(feed));
+  Zotero.Prefs.set("extensions.fix-proposals.feedURL", dir, true);
+  await SE.backup.create(GID);
+  await reopen();
+  await waitFor(() => $$("#fixes-status tr[data-fix]").length === 1 && !/…/.test($("#fixes-status").textContent), "status");
+
+  var ageMinutes = SE.backup.ageMinutes;
+  var create = SE.backup.create;
+  var tick = (b) => { b.checked = true; b.dispatchEvent(new ctx.win.Event("change")); };
+  var me = SE.clients.forPlugin("fix-proposals@ipbes-data").id;
+  var open = () => [...SE.sessions._open.values()].filter((x) => x.client_id === me).length;
+  try {
+    await chooseFix("sess");
+    assert.ok($("#session"), "session started with the fresh backup");
+    assert.equal(open(), 1, "one session in Safe Edit");
+
+    // the backup gets older than the limit during the session
+    SE.backup.ageMinutes = async () => 999;
+    tick($$("#changes input[data-k]")[0]);
+    $("#send-page").click();
+    await waitFor(() => $("#result"), "result");
+    assert.match($("#result").textContent, /1 of 1 change applied/, "sent in the session: " + $("#result").textContent);
+
+    tick($$("#changes input[data-k]")[1]);
+    // a sync ends the session: the old backup counts again
+    await Zotero.Promise.delay(5);
+    Zotero.Libraries.get(ctx.group.libraryID).updateLastSyncTime();
+    await chooseFix("sess");
+    assert.match($("#fix-body").textContent, /999 minutes old/, "refused after the sync");
+    assert.ok($$("#changes input[data-k]")[1].checked, "tick kept");
+
+    SE.backup.create = async (gid) => {
+      SE.backup.ageMinutes = ageMinutes;
+      return create.call(SE.backup, gid);
+    };
+    $("#fix-backup").click();
+    await waitFor(() => $("#session"), "session again after the backup");
+    assert.ok($$("#changes input[data-k]")[1].checked, "tick kept after the backup");
+    assert.ok(!$$("#changes input[data-k]")[0].checked, "the other one not ticked");
+
+    doc().querySelector('#tabs button[data-tab="status"]').click();
+    await waitFor(() => open() === 0, "session ended when leaving the fix");
+  } finally {
+    SE.backup.ageMinutes = ageMinutes;
+    SE.backup.create = create;
+    ctx.win.close();
+    Zotero.Prefs.set("extensions.fix-proposals.feedURL", ctx.feedDir, true);
+  }
+});
+
 test("disabling and enabling the plugin: menu entry and interface go and come back", async () => {
   var { AddonManager } = ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs");
   var addon = await AddonManager.getAddonByID("fix-proposals@ipbes-data");

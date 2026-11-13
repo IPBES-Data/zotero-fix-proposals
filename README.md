@@ -41,6 +41,12 @@ a raw GitHub address, or a **local folder**. The address is a folder with
   highlighted, links to the item in Zotero, the DOI and OpenAlex. Options for
   the same item can be ticked one at a time. Fixes with nothing to check (e.g.
   adding the OpenAlex ID to Extra) are sent with one button.
+  With Safe Edit 0.3.0 or newer, choosing a fix starts an *edit session*: the
+  backup is checked once, then, and stays valid however long you work on the
+  fix, until all its changes are sent or you leave it (another fix or group,
+  another tab, Refresh, closing the window) or sync. The ticked changes are
+  kept while you work on the fix, e.g. when you make a new backup with the
+  button shown under a "backup too old" message.
 - **Undo**: the log of the group by batch; undo single changes or batches.
 - **Restore**: compare with a backup and restore the fields.
 

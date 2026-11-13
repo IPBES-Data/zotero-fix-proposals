@@ -110,6 +110,22 @@ FixProposals.logic = {
     return s;
   },
 
+  // a change, independent of the current value in Zotero: added lines are
+  // rebased on it (see rebase), so their line counts, not the new value
+  tickKey(c) {
+    return [c.item_key, c.field, c.append !== null && c.append !== undefined ? c.append : c.new].join("\n");
+  },
+
+  // the ticked changes again, from their keys (tickKey), where Safe Edit
+  // accepts them
+  selectionFromKeys(changes, ok, keys) {
+    var s = new Set();
+    changes.forEach((c, i) => {
+      if (ok[i] && keys.has(this.tickKey(c))) s.add(i);
+    });
+    return s;
+  },
+
   // items of a fix (alternatives count once) and how many are made already
   counts(changes, made) {
     var key = (c) => (c.choice === null || c.choice === undefined ? c.item_key + "|" + c.field : "choice|" + c.choice);
