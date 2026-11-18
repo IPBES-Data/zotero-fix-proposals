@@ -1,11 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.2.1
 
 - "New fixes available — Refresh": checked after loading a group and every
   5 minutes while the window is open (needs `created` per group in
-  index.json, published by the report from its next version; nothing shown
-  with older index files).
+  index.json, which the report publishes from now on; nothing shown with
+  older index files).
 
 ## 0.2.0
 
