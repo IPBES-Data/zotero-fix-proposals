@@ -136,7 +136,10 @@ var inSession = () => (S.work && S.work.session ? { session: S.work.session } : 
 // ---- start -------------------------------------------------------------------
 
 window.addEventListener("load", guarded(init));
-window.addEventListener("unload", () => leaveFix());
+window.addEventListener("unload", () => {
+  clearInterval(S.checkTimer);
+  leaveFix();
+});
 
 async function init() {
   FP = Zotero.FixProposals;
@@ -146,6 +149,7 @@ async function init() {
     b.addEventListener("click", guarded(() => showTab(b.dataset.tab)));
   }
   $("refresh").addEventListener("click", guarded(() => loadGroup()));
+  $("new-fixes").addEventListener("click", guarded(() => loadGroup()));
   $("update-fixes").addEventListener("click", () => S.data && S.data.update && Zotero.launchURL(S.data.update));
   $("group").addEventListener("command", guarded(() => loadGroup()));
   $("fix").addEventListener("command", guarded(() => showFix()));
@@ -172,6 +176,24 @@ async function init() {
   var first = groups.find(inZotero);
   if (first) $("group").value = String(first.group_id);
   await loadGroup();
+  S.checkTimer = setInterval(checkNewFixes, CHECK_MINUTES * 60000);
+}
+
+// newer fixes published since the group was loaded: checked after loading
+// and every CHECK_MINUTES while the window is open, with the small index.json
+// (the group files are large); the fixes are only loaded on Refresh
+var CHECK_MINUTES = 5;
+async function checkNewFixes() {
+  if (!S.data || !S.entry) return;
+  try {
+    var index = await FP.feed.index();
+    var entry = index.groups.find((g) => g.group_id === S.entry.group_id);
+    var newer = !!entry && L.isNewer(entry.created, S.data.created);
+    $("new-fixes").hidden = !newer;
+    $("new-fixes").title = newer ? "Fixes updated " + localTime(entry.created) + ": click to load them" : "";
+  } catch (e) {
+    // e.g. offline: try again next time
+  }
 }
 
 // tabs wait for a group which is still loading (S.loading)
@@ -192,6 +214,8 @@ async function loadGroupNow() {
   busy("Loading the proposals of " + S.entry.name + " …");
   await leaveFix();
   S.data = await FP.feed.group(S.entry);
+  $("new-fixes").hidden = true;
+  checkNewFixes();
   await refreshStatus();
   var fixValue = $("fix").value;
   setItems($("fix"), S.data.fixes.map((f) => ({ value: f.id, label: fixLabel(f) })));
