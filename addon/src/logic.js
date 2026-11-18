@@ -37,6 +37,14 @@ FixProposals.logic = {
     return { ...change, old: current, new: current === "" ? change.append : current + "\n" + change.append };
   },
 
+  // whether newer fixes are published (`created` of the group in index.json)
+  // than the loaded ones; false if one of the times is missing (older index)
+  isNewer(published, loaded) {
+    var p = Date.parse(published);
+    var l = Date.parse(loaded);
+    return !isNaN(p) && !isNaN(l) && p > l;
+  },
+
   // whether Zotero has the new value already; DOIs are not case sensitive
   isMade(change, current) {
     if (current === null || current === undefined) {

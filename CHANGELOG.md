@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- "New fixes available — Refresh": checked after loading a group and every
+  5 minutes while the window is open (needs `created` per group in
+  index.json, which the report publishes from now on; nothing shown with
+  older index files).
+
 ## 0.2.0
 
 - Edit sessions (with Zotero Safe Edit 0.3.0 or newer): the backup is checked

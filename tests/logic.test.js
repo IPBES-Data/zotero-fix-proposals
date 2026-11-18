@@ -89,3 +89,11 @@ test("ticks kept by key: the same changes again, rebased lines too", () => {
   assert.deepStrictEqual([...L.selectionFromKeys(again, [true, true, true], keys)], [1, 2]);
   assert.deepStrictEqual([...L.selectionFromKeys(again, [true, false, true], keys)], [2], "not accepted: not ticked");
 });
+
+test("newer fixes: only when both times are there and the published one is later", () => {
+  assert.ok(L.isNewer("2026-11-18T12:05:00Z", "2026-11-18T00:05:00Z"));
+  assert.ok(!L.isNewer("2026-11-18T00:05:00Z", "2026-11-18T00:05:00Z"));
+  assert.ok(!L.isNewer("2026-11-17T12:05:00Z", "2026-11-18T00:05:00Z"));
+  assert.ok(!L.isNewer(undefined, "2026-11-18T00:05:00Z"), "older index without created");
+  assert.ok(!L.isNewer("2026-11-18T12:05:00Z", undefined));
+});

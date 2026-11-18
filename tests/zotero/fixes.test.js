@@ -235,6 +235,34 @@ test("while a group loads, nothing of the previous one is shown", async () => {
   await waitFor(() => $$("#fixes-status tr[data-fix]").length === 3 && !/…/.test($("#fixes-status").textContent), "reloaded");
 });
 
+test("newer fixes published: a notice, clicking it loads them", async () => {
+  // the index of the setup has no created per group (older pipeline): nothing shown
+  await ctx.win.checkNewFixes();
+  assert.ok($("#new-fixes").hidden, "nothing with an index without created");
+  assert.equal(ctx.win.CHECK_MINUTES, 5, "checked every 5 minutes");
+
+  var later = new Date(Date.parse(ctx.feed.created) + 60000).toISOString();
+  var index = (created) => JSON.stringify({ format: "zotero-fix-proposals-index", version: 1, created,
+    groups: [{ group_id: GID, name: "Test", file: "test.json", created }] });
+  await IOUtils.writeUTF8(PathUtils.join(ctx.feedDir, "index.json"), index(ctx.feed.created));
+  await ctx.win.checkNewFixes();
+  assert.ok($("#new-fixes").hidden, "same time: nothing new");
+
+  // the report runs again
+  ctx.feed = { ...ctx.feed, created: later };
+  await IOUtils.writeUTF8(PathUtils.join(ctx.feedDir, "test.json"), JSON.stringify(ctx.feed));
+  await IOUtils.writeUTF8(PathUtils.join(ctx.feedDir, "index.json"), index(later));
+  await ctx.win.checkNewFixes();
+  assert.ok(!$("#new-fixes").hidden, "notice shown");
+  assert.match($("#new-fixes").title, /click to load them/, "explained on mouse-over");
+
+  $("#new-fixes").click();
+  await waitFor(() => $$("#fixes-status tr[data-fix]").length === 3 && !/…/.test($("#fixes-status").textContent), "reloaded");
+  await ctx.win.checkNewFixes();
+  assert.ok($("#new-fixes").hidden, "notice gone after loading the new fixes");
+  assert.ok($("#updated").textContent.includes(new Date(later).toLocaleString()), "time of the new fixes shown");
+});
+
 test("\"Show in Zotero\" selects the item in the main window", async () => {
   await chooseFix("doi_form");
   var box = $("#show-done");
